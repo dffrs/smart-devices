@@ -1,12 +1,11 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
 	"log"
-	"net/http"
 	"os"
-	"time"
+
+	shelly "smart-devices/internal/shelly"
+	outlet "smart-devices/internal/shelly/outlet"
 
 	"github.com/joho/godotenv"
 )
@@ -42,21 +41,10 @@ func main() {
 	}
 
 	host := os.Getenv("HOST")
-	endpoint := "/rpc/Switch.GetStatus?id=0"
 
-	client := &http.Client{Timeout: 3 * time.Second}
-	resp, err := client.Get(fmt.Sprintf("http://%s%s", host, endpoint))
-	if err != nil {
-		log.Fatalf("%v", err)
-	}
-	defer resp.Body.Close()
+	outlet := outlet.NewShelly(host, 3)
 
-	var temp Result
-	err = json.NewDecoder(resp.Body).Decode(&temp)
-	if err != nil {
-		log.Fatalf("%v", err)
-	}
+	temp := outlet.GetStatus()
 
-	b, _ := json.MarshalIndent(temp, "", "  ")
-	fmt.Println(string(b))
+	shelly.PrettyPrint(&temp)
 }
