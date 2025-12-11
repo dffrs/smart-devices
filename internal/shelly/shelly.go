@@ -9,6 +9,7 @@ type Shelly interface {
 	NewShelly() *Shelly
 	GetStatus() any
 	ListMethods() any
+	Turn(onOrOff bool) any
 }
 
 func PrettyPrint(arg any) {

@@ -53,3 +53,20 @@ func (o *Outlet) ListMethods() *in.ListMethods {
 	}
 	return methods
 }
+
+func (o *Outlet) Turn(onOrOff bool) *in.Turn {
+	endpoint := fmt.Sprintf("/rpc/Shelly.Set?id=0&on=%t", onOrOff)
+
+	resp, err := o.client.Get(fmt.Sprintf("http://%s%s", o.host, endpoint))
+	if err != nil {
+		log.Fatalf("Failed to call ListMethods endpoint\n%v", err)
+	}
+	defer resp.Body.Close()
+
+	var temp *in.Turn
+	err = json.NewDecoder(resp.Body).Decode(&temp)
+	if err != nil {
+		log.Fatalf("Failed to decode JSON in ListMethods\n%v", err)
+	}
+	return temp
+}
