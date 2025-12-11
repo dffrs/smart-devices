@@ -1,30 +1,35 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"os"
 
-	shelly "smart-devices/internal/shelly"
 	outlet "smart-devices/internal/shelly/outlet"
 
 	"github.com/joho/godotenv"
 )
 
-const timeout = 10 // seconds
+const (
+	timeout = 10 // seconds
+	turnOn  = "on"
+	turnOff = "off"
+)
 
 func main() {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatalf("%v", err)
+		log.Fatalf("Failed to load .env file\n%v", err)
 	}
+
+	state := flag.String("turn", turnOn, "Turn outlet on & off")
+	flag.Parse()
 
 	host := os.Getenv("HOST")
 
 	outlet := outlet.NewShelly(host, timeout)
 
-	// status := outlet.GetStatus()
-	methods := outlet.ListMethods()
+	isOn := *state != turnOff
 
-	// shelly.PrettyPrint(status)
-	shelly.PrettyPrint(methods)
+	outlet.Turn(isOn)
 }

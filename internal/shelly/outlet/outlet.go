@@ -55,7 +55,7 @@ func (o *Outlet) ListMethods() *in.ListMethods {
 }
 
 func (o *Outlet) Turn(onOrOff bool) *in.Turn {
-	endpoint := fmt.Sprintf("/rpc/Shelly.Set?id=0&on=%t", onOrOff)
+	endpoint := fmt.Sprintf("/rpc/Switch.Set?id=0&on=%t", onOrOff)
 
 	resp, err := o.client.Get(fmt.Sprintf("http://%s%s", o.host, endpoint))
 	if err != nil {
