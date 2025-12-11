@@ -10,6 +10,8 @@ import (
 	"github.com/joho/godotenv"
 )
 
+const timeout = 10 // seconds
+
 func main() {
 	err := godotenv.Load()
 	if err != nil {
@@ -18,9 +20,11 @@ func main() {
 
 	host := os.Getenv("HOST")
 
-	outlet := outlet.NewShelly(host, 3)
+	outlet := outlet.NewShelly(host, timeout)
 
-	status := outlet.GetStatus()
+	// status := outlet.GetStatus()
+	methods := outlet.ListMethods()
 
-	shelly.PrettyPrint(&status)
+	// shelly.PrettyPrint(status)
+	shelly.PrettyPrint(methods)
 }

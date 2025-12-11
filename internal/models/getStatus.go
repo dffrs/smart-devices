@@ -33,6 +33,7 @@ type (
 type Mqtt struct {
 	Connected bool `json:"connected"`
 }
+
 type (
 	PlugsUI struct{}
 	Aenergy struct {
@@ -43,9 +44,9 @@ type (
 )
 
 type RetAenergy struct {
-	ByMinute []int `json:"by_minute"`
-	MinuteTS int   `json:"minute_ts"`
-	Total    int   `json:"total"`
+	ByMinute []float64 `json:"by_minute"`
+	MinuteTS int       `json:"minute_ts"`
+	Total    float64   `json:"total"`
 }
 type Temperature struct {
 	TC float64 `json:"tC"`
