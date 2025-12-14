@@ -8,7 +8,6 @@ package shelly
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"time"
 
@@ -25,53 +24,53 @@ func NewOutlet(host string, timeoutInSeconds int) *Outlet {
 	return &Outlet{host: host, client: client}
 }
 
-func (o *Outlet) GetStatus() *tp.GetStatus {
+func (o *Outlet) GetStatus() (*tp.GetStatus, error) {
 	endpoint := "/rpc/Shelly.GetStatus"
 
 	resp, err := o.client.Get(fmt.Sprintf("http://%s%s", o.host, endpoint))
 	if err != nil {
-		log.Fatalf("Failed to call GetStatus endpoint\n%v", err)
+		return nil, fmt.Errorf("failed to call GetStatus endpoint\n%v", err)
 	}
 	defer resp.Body.Close()
 
 	var status *tp.GetStatus
 	err = json.NewDecoder(resp.Body).Decode(&status)
 	if err != nil {
-		log.Fatalf("Failed to decode JSON in GetStatus\n%v", err)
+		return nil, fmt.Errorf("failed to decode JSON in GetStatus\n%v", err)
 	}
-	return status
+	return status, nil
 }
 
-func (o *Outlet) ListMethods() *tp.ListMethods {
+func (o *Outlet) ListMethods() (*tp.ListMethods, error) {
 	endpoint := "/rpc/Shelly.ListMethods"
 
 	resp, err := o.client.Get(fmt.Sprintf("http://%s%s", o.host, endpoint))
 	if err != nil {
-		log.Fatalf("Failed to call ListMethods endpoint\n%v", err)
+		return nil, fmt.Errorf("failed to call ListMethods endpoint\n%v", err)
 	}
 	defer resp.Body.Close()
 
 	var methods *tp.ListMethods
 	err = json.NewDecoder(resp.Body).Decode(&methods)
 	if err != nil {
-		log.Fatalf("Failed to decode JSON in ListMethods\n%v", err)
+		return nil, fmt.Errorf("failed to decode JSON in ListMethods\n%v", err)
 	}
-	return methods
+	return methods, nil
 }
 
-func (o *Outlet) Turn(onOrOff bool) *tp.Turn {
+func (o *Outlet) Turn(onOrOff bool) (*tp.Turn, error) {
 	endpoint := fmt.Sprintf("/rpc/Switch.Set?id=0&on=%t", onOrOff)
 
 	resp, err := o.client.Get(fmt.Sprintf("http://%s%s", o.host, endpoint))
 	if err != nil {
-		log.Fatalf("Failed to call ListMethods endpoint\n%v", err)
+		return nil, fmt.Errorf("failed to call ListMethods endpoint\n%v", err)
 	}
 	defer resp.Body.Close()
 
 	var temp *tp.Turn
 	err = json.NewDecoder(resp.Body).Decode(&temp)
 	if err != nil {
-		log.Fatalf("Failed to decode JSON in ListMethods\n%v", err)
+		return nil, fmt.Errorf("failed to decode JSON in ListMethods\n%v", err)
 	}
-	return temp
+	return temp, nil
 }

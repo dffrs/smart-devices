@@ -16,20 +16,19 @@ const (
 
 func dealWithStatus(status *string, outlet *shelly.Outlet) error {
 	var output any
-	var error error
+	var err error
 
-	// TODO: getStatus and listMethods should return errors
 	switch *status {
 	case getStatus:
-		output = outlet.GetStatus()
+		output, err = outlet.GetStatus()
 	case getMethods:
-		output = outlet.ListMethods()
+		output, err = outlet.ListMethods()
 	default:
-		error = errors.New("unrecognized option for get option")
+		err = errors.New("unrecognized option for get option")
 	}
 
-	if error != nil {
-		return error
+	if err != nil {
+		return err
 	}
 
 	PrettyPrint(output)
@@ -37,9 +36,8 @@ func dealWithStatus(status *string, outlet *shelly.Outlet) error {
 	return nil
 }
 
-func dealWithState(state *string, outlet *shelly.Outlet) error {
-	var isOn bool
-	var err error
+func getTurnOption(state *string) (bool, error) {
+	isOn := false
 
 	switch *state {
 	case turnOn:
@@ -47,14 +45,22 @@ func dealWithState(state *string, outlet *shelly.Outlet) error {
 	case turnOff:
 		isOn = false
 	default:
-		err = errors.New("unrecognized option for turn option")
+		return false, errors.New("unrecognized option for turn option")
 	}
 
+	return isOn, nil
+}
+
+func dealWithState(state *string, outlet *shelly.Outlet) error {
+	isOn, err := getTurnOption(state)
 	if err != nil {
 		return err
 	}
 
-	outlet.Turn(isOn)
+	_, err = outlet.Turn(isOn)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
