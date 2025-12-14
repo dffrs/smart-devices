@@ -3,16 +3,11 @@ package main
 import (
 	"flag"
 	"log"
-	"os"
 
 	in "smart-devices/internal"
-	sh "smart-devices/internal/shelly"
-
-	"github.com/joho/godotenv"
 )
 
 const (
-	timeout = 10 // seconds
 	turnOn  = "on"
 	turnOff = "off"
 
@@ -21,17 +16,14 @@ const (
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatalf("Failed to load .env file\n%v", err)
-	}
-
 	state := flag.String("turn", "", "Turn outlet on & off")
 	status := flag.String("get", "", "Get Status report from outlet")
 	flag.Parse()
 
-	host := os.Getenv("HOST")
-	outlet := sh.NewOutlet(host, timeout)
+	outlet, err := in.CreateOutlet()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	// TODO: clean me up
 	switch true {
