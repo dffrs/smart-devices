@@ -9,7 +9,7 @@ import (
 const timeout = 10 // seconds
 
 func CreateOutlet() (*sh.Outlet, error) {
-	err := LoadEnv()
+	err := loadEnv()
 	if err != nil {
 		return nil, err
 	}

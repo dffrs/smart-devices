@@ -66,7 +66,7 @@ func dealWithState(state *string, outlet *shelly.Outlet) error {
 }
 
 func Run(outlet *shelly.Outlet) error {
-	state, status := LoadFlags()
+	state, status := loadFlags()
 
 	switch true {
 
