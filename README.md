@@ -29,11 +29,15 @@ The CLI exposes a small set of flags for interacting with the device:
 
 ---
 
-## Build
+## Run
 
-`make`
+```bash
+# build - this produces an executable file
+make
 
-This produces an executable file, called `sd`
+# run
+./sd [-options] [-args]
+```
 
 ---
 
