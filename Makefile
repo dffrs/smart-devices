@@ -9,4 +9,4 @@ fmt: clean
 vet: fmt
 				go vet ./...
 build: vet
-				go build -o main
+				go build -o sd -mod=vendor cmd/smart-devices/main.go
