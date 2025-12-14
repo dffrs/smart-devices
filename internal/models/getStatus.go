@@ -1,4 +1,6 @@
-package internal
+// Package models defines the data structures used to decode and represent
+// JSON responses returned by supported IoT device RPC endpoints.
+package models
 
 type GetStatus struct {
 	Ble     Ble     `json:"ble"`

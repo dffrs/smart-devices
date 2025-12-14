@@ -1,16 +1,10 @@
+// Package internal contains shared internal helpers and abstractions used by the application.
 package internal
 
 import (
 	"encoding/json"
 	"fmt"
 )
-
-type Shelly interface {
-	NewShelly() *Shelly
-	GetStatus() any
-	ListMethods() any
-	Turn(onOrOff bool) any
-}
 
 func PrettyPrint(arg any) {
 	b, _ := json.MarshalIndent(arg, "", "  ")

@@ -1,4 +1,9 @@
-package internal
+// Package shelly provides low-level abstractions for interacting with IoT outlet device
+//
+// This package contains an Outlet type, which represents a network-connected
+// smart power outlet and exposes a small, focused API for querying device status,
+// listing supported RPC methods, and toggling power state.
+package shelly
 
 import (
 	"encoding/json"
@@ -7,7 +12,7 @@ import (
 	"net/http"
 	"time"
 
-	in "smart-devices/internal/models"
+	"smart-devices/internal/models"
 )
 
 type Outlet struct {
@@ -15,12 +20,12 @@ type Outlet struct {
 	client *http.Client
 }
 
-func NewShelly(host string, timeoutInSeconds int) *Outlet {
+func NewOutlet(host string, timeoutInSeconds int) *Outlet {
 	client := &http.Client{Timeout: time.Duration(timeoutInSeconds) * time.Second}
 	return &Outlet{host: host, client: client}
 }
 
-func (o *Outlet) GetStatus() *in.GetStatus {
+func (o *Outlet) GetStatus() *models.GetStatus {
 	endpoint := "/rpc/Shelly.GetStatus"
 
 	resp, err := o.client.Get(fmt.Sprintf("http://%s%s", o.host, endpoint))
@@ -29,7 +34,7 @@ func (o *Outlet) GetStatus() *in.GetStatus {
 	}
 	defer resp.Body.Close()
 
-	var status *in.GetStatus
+	var status *models.GetStatus
 	err = json.NewDecoder(resp.Body).Decode(&status)
 	if err != nil {
 		log.Fatalf("Failed to decode JSON in GetStatus\n%v", err)
@@ -37,7 +42,7 @@ func (o *Outlet) GetStatus() *in.GetStatus {
 	return status
 }
 
-func (o *Outlet) ListMethods() *in.ListMethods {
+func (o *Outlet) ListMethods() *models.ListMethods {
 	endpoint := "/rpc/Shelly.ListMethods"
 
 	resp, err := o.client.Get(fmt.Sprintf("http://%s%s", o.host, endpoint))
@@ -46,7 +51,7 @@ func (o *Outlet) ListMethods() *in.ListMethods {
 	}
 	defer resp.Body.Close()
 
-	var methods *in.ListMethods
+	var methods *models.ListMethods
 	err = json.NewDecoder(resp.Body).Decode(&methods)
 	if err != nil {
 		log.Fatalf("Failed to decode JSON in ListMethods\n%v", err)
@@ -54,7 +59,7 @@ func (o *Outlet) ListMethods() *in.ListMethods {
 	return methods
 }
 
-func (o *Outlet) Turn(onOrOff bool) *in.Turn {
+func (o *Outlet) Turn(onOrOff bool) *models.Turn {
 	endpoint := fmt.Sprintf("/rpc/Switch.Set?id=0&on=%t", onOrOff)
 
 	resp, err := o.client.Get(fmt.Sprintf("http://%s%s", o.host, endpoint))
@@ -63,7 +68,7 @@ func (o *Outlet) Turn(onOrOff bool) *in.Turn {
 	}
 	defer resp.Body.Close()
 
-	var temp *in.Turn
+	var temp *models.Turn
 	err = json.NewDecoder(resp.Body).Decode(&temp)
 	if err != nil {
 		log.Fatalf("Failed to decode JSON in ListMethods\n%v", err)

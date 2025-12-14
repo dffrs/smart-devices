@@ -5,8 +5,8 @@ import (
 	"log"
 	"os"
 
-	internal "smart-devices/internal/shelly"
-	outlet "smart-devices/internal/shelly/outlet"
+	in "smart-devices/internal"
+	sh "smart-devices/internal/shelly"
 
 	"github.com/joho/godotenv"
 )
@@ -31,7 +31,7 @@ func main() {
 	flag.Parse()
 
 	host := os.Getenv("HOST")
-	outlet := outlet.NewShelly(host, timeout)
+	outlet := sh.NewOutlet(host, timeout)
 
 	// TODO: clean me up
 	switch true {
@@ -41,10 +41,10 @@ func main() {
 		switch *status {
 		case getStatus:
 			output := outlet.GetStatus()
-			internal.PrettyPrint(output)
+			in.PrettyPrint(output)
 		case getMethods:
 			output := outlet.ListMethods()
-			internal.PrettyPrint(output)
+			in.PrettyPrint(output)
 		}
 
 	// deal with turn on/off option
