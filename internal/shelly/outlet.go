@@ -12,7 +12,7 @@ import (
 	"net/http"
 	"time"
 
-	"smart-devices/internal/models"
+	tp "smart-devices/api/types"
 )
 
 type Outlet struct {
@@ -25,7 +25,7 @@ func NewOutlet(host string, timeoutInSeconds int) *Outlet {
 	return &Outlet{host: host, client: client}
 }
 
-func (o *Outlet) GetStatus() *models.GetStatus {
+func (o *Outlet) GetStatus() *tp.GetStatus {
 	endpoint := "/rpc/Shelly.GetStatus"
 
 	resp, err := o.client.Get(fmt.Sprintf("http://%s%s", o.host, endpoint))
@@ -34,7 +34,7 @@ func (o *Outlet) GetStatus() *models.GetStatus {
 	}
 	defer resp.Body.Close()
 
-	var status *models.GetStatus
+	var status *tp.GetStatus
 	err = json.NewDecoder(resp.Body).Decode(&status)
 	if err != nil {
 		log.Fatalf("Failed to decode JSON in GetStatus\n%v", err)
@@ -42,7 +42,7 @@ func (o *Outlet) GetStatus() *models.GetStatus {
 	return status
 }
 
-func (o *Outlet) ListMethods() *models.ListMethods {
+func (o *Outlet) ListMethods() *tp.ListMethods {
 	endpoint := "/rpc/Shelly.ListMethods"
 
 	resp, err := o.client.Get(fmt.Sprintf("http://%s%s", o.host, endpoint))
@@ -51,7 +51,7 @@ func (o *Outlet) ListMethods() *models.ListMethods {
 	}
 	defer resp.Body.Close()
 
-	var methods *models.ListMethods
+	var methods *tp.ListMethods
 	err = json.NewDecoder(resp.Body).Decode(&methods)
 	if err != nil {
 		log.Fatalf("Failed to decode JSON in ListMethods\n%v", err)
@@ -59,7 +59,7 @@ func (o *Outlet) ListMethods() *models.ListMethods {
 	return methods
 }
 
-func (o *Outlet) Turn(onOrOff bool) *models.Turn {
+func (o *Outlet) Turn(onOrOff bool) *tp.Turn {
 	endpoint := fmt.Sprintf("/rpc/Switch.Set?id=0&on=%t", onOrOff)
 
 	resp, err := o.client.Get(fmt.Sprintf("http://%s%s", o.host, endpoint))
@@ -68,7 +68,7 @@ func (o *Outlet) Turn(onOrOff bool) *models.Turn {
 	}
 	defer resp.Body.Close()
 
-	var temp *models.Turn
+	var temp *tp.Turn
 	err = json.NewDecoder(resp.Body).Decode(&temp)
 	if err != nil {
 		log.Fatalf("Failed to decode JSON in ListMethods\n%v", err)
