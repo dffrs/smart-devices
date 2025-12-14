@@ -27,6 +27,16 @@ The CLI exposes a small set of flags for interacting with the device:
 - `-set on` - turns the outlet on
 - `-set off` - turns the outlet off
 
+---
+
+## Build
+
+`make`
+
+This produces an executable file, called `sd`
+
+---
+
 ## Status
 
 🚧 Work in progress.
