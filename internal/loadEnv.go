@@ -1,7 +1,7 @@
 package internal
 
 import (
-	"errors"
+	"fmt"
 
 	"github.com/joho/godotenv"
 )
@@ -9,7 +9,7 @@ import (
 func LoadEnv() error {
 	err := godotenv.Load()
 	if err != nil {
-		return errors.New("failed to load .env file\n%v")
+		return fmt.Errorf("failed to load .env file\n%v", err.Error())
 	}
 	return nil
 }
