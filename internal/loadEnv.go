@@ -2,14 +2,29 @@ package internal
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/joho/godotenv"
 )
 
-func loadEnv() error {
-	err := godotenv.Load()
+type config struct {
+	host string
+}
+
+const envFile = "sd.env"
+
+func loadEnv() (*config, error) {
+	userConfigDir, err := os.UserConfigDir()
 	if err != nil {
-		return fmt.Errorf("failed to load .env file\n%v", err.Error())
+		return nil, err
 	}
-	return nil
+
+	envPath := fmt.Sprintf("%s/%s", userConfigDir, envFile)
+
+	err = godotenv.Load(envPath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to load %s file. Create it, if it does not exist, with content HOST = <IP of outlet>", envPath)
+	}
+
+	return &config{host: os.Getenv("HOST")}, nil
 }
